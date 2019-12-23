@@ -110,7 +110,7 @@ pub struct Rule {
     pub alive_max: u8,
 }
 
-const RULE: Rule = Rule {
+pub const CONWAY: Rule = Rule {
     birth_min: 3,
     birth_max: 3,
     alive_min: 2,
