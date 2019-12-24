@@ -27,6 +27,7 @@ pub struct Model {
     pub height: u32,
     pub population: u32,
     rule: Rule,
+    stable: bool,
 }
 
 pub fn random_world(size: u32) -> Vec<Cell> {
@@ -54,10 +55,14 @@ impl Model {
             height,
             population: p,
             rule,
+            stable: false,
         }
     }
     pub fn tick_and_report(&mut self) -> Vec<(u32, Cell)> {
         // update itself, and reports the change in population
+        if self.stable {
+            return vec![];
+        };
         let current = self.clone();
         let mut updates = Vec::new();
         for (i, &cell) in current.world.iter().enumerate() {
@@ -77,6 +82,7 @@ impl Model {
                 }
             }
         }
+        self.stable = updates.is_empty();
         updates
     }
 }
