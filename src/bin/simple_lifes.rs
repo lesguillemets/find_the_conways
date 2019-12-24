@@ -9,10 +9,10 @@ const SIZE: u32 = HEIGHT * WIDTH;
 
 fn main() {
     let w = random_world(SIZE);
-    for birth_min in 0..8 {
-        for birth_max in birth_min..8 {
-            for alive_min in 0..8 {
-                for alive_max in alive_min..8 {
+    for birth_min in 0..9 {
+        for birth_max in birth_min..9 {
+            for alive_min in 0..9 {
+                for alive_max in alive_min..9 {
                     let rule = Rule {
                         birth_min,
                         birth_max,
