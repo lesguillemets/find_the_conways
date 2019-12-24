@@ -82,6 +82,7 @@ impl Model {
                 }
             }
         }
+        // if there's no change, there won't be any change
         self.stable = updates.is_empty();
         updates
     }
