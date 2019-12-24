@@ -9,7 +9,9 @@ def main():
             s = f_name.split('_')
             with open(f_name, 'r') as inp:
                 writer.write("{},{},{},{}\t".format(s[2],s[3],s[4],s[5]))
-                writer.write(inp.read())
+                inside = inp.read()
+                if inside and inside.endswith('\n'):
+                    writer.write(inside)
 
 if __name__ == "__main__":
     main()
