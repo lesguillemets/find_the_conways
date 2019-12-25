@@ -8,8 +8,11 @@ const SAVE_WIDTH: u32 = 800;
 const SAVE_HEIGHT: u32 = 600;
 const MAX_PLOT_SEQS: u32 = 100;
 
+fn id(x: &PopulationSeries) -> PopulationSeries {
+    x.clone()
+}
 fn main() {
-    let mut fg = plot_tsv("./results/whole_simple_lifes.tsv", &[]);
+    let mut fg = plot_tsv("./results/whole_simple_lifes.tsv", &[&id]);
     fg.save_to_png(
         &format!(
             "plots/whole_simple_lifes_{}.png",
@@ -25,7 +28,10 @@ fn main() {
 }
 
 type PopulationSeries = Vec<u32>;
-fn plot_tsv(fname: &str) -> gnuplot::Figure {
+fn plot_tsv(
+    fname: &str,
+    filters: &[&dyn Fn(&PopulationSeries) -> PopulationSeries],
+) -> gnuplot::Figure {
     let f = File::open(fname).expect("unable to open file");
     let reader = BufReader::new(f);
     let mut fg = gnuplot::Figure::new();
@@ -35,9 +41,12 @@ fn plot_tsv(fname: &str) -> gnuplot::Figure {
         let mut words = line.split_whitespace();
         let header = words.next().expect("empty line?");
         println!("{}", header);
-        let ys: Vec<u32> = words
-            .map(|n| n.parse::<u32>().expect(&format!("{}", n)))
+        let mut ys: Vec<u32> = words
+            .map(|n| n.parse::<u32>().unwrap_or_else(|_| panic!("{}", n)))
             .collect();
+        for filter in filters {
+            ys = filter(&ys);
+        }
         axes.lines(0..ys.len() as u32, &ys, &[]);
     }
     fg
