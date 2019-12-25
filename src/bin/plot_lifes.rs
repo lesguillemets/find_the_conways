@@ -9,11 +9,22 @@ const SAVE_HEIGHT: u32 = 600;
 const MAX_PLOT_SEQS: u32 = 100;
 
 fn main() {
-    let mut fg = plot_tsv("./results/whole_simple_lifes.tsv");
-    fg.save_to_png("plots/whole_simple_lifes.png", 1600, 1200)
-        .unwrap();
+    let mut fg = plot_tsv("./results/whole_simple_lifes.tsv", &[]);
+    fg.save_to_png(
+        &format!(
+            "plots/whole_simple_lifes_{}.png",
+            time::SystemTime::now()
+                .duration_since(time::UNIX_EPOCH)
+                .unwrap()
+                .as_secs()
+        ),
+        1600,
+        1200,
+    )
+    .unwrap();
 }
 
+type PopulationSeries = Vec<u32>;
 fn plot_tsv(fname: &str) -> gnuplot::Figure {
     let f = File::open(fname).expect("unable to open file");
     let reader = BufReader::new(f);
